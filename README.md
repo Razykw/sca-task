@@ -18,14 +18,41 @@ This project provides a Dockerized tool to scan npm repositories for vulnerable 
 
 2. **Run the scanner:**
    ```sh
-   docker run --rm -v $PWD:/scaapp sca-task
+   docker run --rm -v $PWD:/work sca-task
    ```
    This will scan the `package-lock.json` in your current directory and output `findings.json`.
 
 3. **Run tests:**
    ```sh
-   docker run --rm -v $PWD:/scaapp --entrypoint pytest sca-task test.py
+   docker run --rm -v $PWD:/work --entrypoint pytest sca-task /work/test.py
    ```
 ## Output Format
 
-The results are saved to `findings.json`.
+The results are saved to `findings.json` in the following format:
+```json
+{
+  "results": [
+    {
+      "cve": "CVE-xxxx-xxxx",
+      "name": "package-name",
+      "version": "x.y.z",
+      "dependency_graph": "A → B → package-name"
+    }
+    // ...
+  ]
+}
+```
+
+## Files
+
+- `Dockerfile` – Container setup and entrypoint.
+- `parsers.py` – Python script for scanning and transforming results.
+- `test.py` – Pytest tests for output validation.
+- `requirements.txt` – Python dependencies.
+- `package-lock.json` – Example npm lockfile.
+
+## Requirements
+
+- Docker
+- GitHub repository with the above files
+
